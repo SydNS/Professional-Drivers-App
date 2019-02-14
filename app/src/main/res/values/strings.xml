@@ -20,7 +20,6 @@
     to meet the highest quality level.</string>
 
 
-
     <string name="string_dedcforimage">logoforco</string>
     <string name="dont_have_account">Dont have account?</string>
     <string name="email">Email</string>
@@ -49,5 +48,7 @@
     <string name="customerlogin">Customer Login</string>
     <string name="driverregistration">Driver Registration</string>
     <string name="gettingyouadriver">Getting Your Driver</string>
+    <string name="driverfound">Driver Found</string>
+    <string name="driverishere">Driver is here</string>
 
 </resources>
