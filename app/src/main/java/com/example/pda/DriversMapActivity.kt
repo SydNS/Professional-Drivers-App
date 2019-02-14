@@ -218,7 +218,9 @@ open class DriversMapActivity : AppCompatActivity(), OnMapReadyCallback,
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latlong))
             mMap.addMarker(
                 MarkerOptions().position(latlong)
-                    .title("my Location")
+                    .title("Driver")
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.driver))
+
             )
             mMap.animateCamera(CameraUpdateFactory.zoomTo(17F))
             DisconnectDriver()
