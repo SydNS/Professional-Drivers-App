@@ -20,7 +20,7 @@ class WelcomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_welcome)
 
-        window.setFlags(
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) window.setFlags(
             WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
             WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
         )
@@ -44,12 +44,12 @@ class WelcomeActivity : AppCompatActivity() {
         driver_welcome_btn?.setOnClickListener {
             val driverIntent = Intent(this,DriverLoginRegisterActivity::class.java)
             startActivity(driverIntent)
-            finish()
+//            finish()
         }
         customer_welcome_btn?.setOnClickListener {
             val customerIntent = Intent(this,CustomerLoginRegisterActivity::class.java            )
             startActivity(customerIntent)
-            finish()
+//            finish()
         }
     }
     //    @Override

@@ -5,14 +5,17 @@ package com.example.pda
 //import CropImage.ActivityResult
 import android.app.ProgressDialog
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.NonNull
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pda.CustomerLoginRegisterActivity
 //import com.google.android.gms.location.LocationListener
@@ -23,28 +26,31 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.android.synthetic.main.activity_customer_login_register.*
+import kotlinx.android.synthetic.main.activity_driver_login_register.*
 
 class CustomerLoginRegisterActivity : AppCompatActivity() {
-    private var CreateCustomerAccount: TextView? = null
-    private var TitleCustomer: TextView? = null
-    private var LoginCustomerButton: Button? = null
-    private var RegisterCustomerButton: Button? = null
-    private var CustomerEmail: EditText? = null
-    private var CustomerPassword: EditText? = null
+     
     private var customersDatabaseRef: DatabaseReference? = null
     private var mAuth: FirebaseAuth? = null
     private var firebaseAuthListner: FirebaseAuth.AuthStateListener? = null
     private var loadingBar: ProgressDialog? = null
     private var currentUser: FirebaseUser? = null
     var currentUserId: String? = null
-    protected override fun onCreate(savedInstanceState: Bundle?) {
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customer_login_register)
+
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+            WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+        )
 
         mAuth = FirebaseAuth.getInstance()
 
         firebaseAuthListner = FirebaseAuth.AuthStateListener() {
-            fun onAuthStateChanged(@NonNull firebaseAuth:FirebaseAuth) {
+            fun onAuthStateChanged() {
                 currentUser = FirebaseAuth.getInstance().currentUser
                 if (currentUser != null)
                 {
@@ -55,25 +61,19 @@ class CustomerLoginRegisterActivity : AppCompatActivity() {
             }
         }
 
-        CreateCustomerAccount = findViewById<TextView>(R.id.customer_register_link)
-        TitleCustomer = findViewById<TextView>(R.id.customer_status)
-        LoginCustomerButton = findViewById<Button>(R.id.customer_login_btn)
-        RegisterCustomerButton = findViewById<Button>(R.id.customer_register_btn)
-        CustomerEmail = findViewById<EditText>(R.id.customer_email)
-        CustomerPassword = findViewById<EditText>(R.id.customer_password)
         loadingBar = ProgressDialog(this)
-        RegisterCustomerButton!!.visibility = View.INVISIBLE
-        RegisterCustomerButton!!.isEnabled = false
-        CreateCustomerAccount!!.setOnClickListener {
-            CreateCustomerAccount!!.visibility = View.INVISIBLE
-            LoginCustomerButton!!.visibility = View.INVISIBLE
-            TitleCustomer!!.text = "Driver Registration"
-            RegisterCustomerButton!!.visibility = View.VISIBLE
-            RegisterCustomerButton!!.isEnabled = true
+        customer_register_btn!!.visibility = View.INVISIBLE
+        customer_register_btn!!.isEnabled = false
+        customer_register_link!!.setOnClickListener {
+            customer_register_link!!.visibility = View.INVISIBLE
+            customer_login_btn!!.visibility = View.INVISIBLE
+            customer_status!!.text = getString(R.string.customerregistration)
+            customer_register_btn!!.visibility = View.VISIBLE
+            customer_register_btn!!.isEnabled = true
         }
-        RegisterCustomerButton!!.setOnClickListener {
-            val email = CustomerEmail!!.text.toString()
-            val password = CustomerPassword!!.text.toString()
+        customer_register_btn!!.setOnClickListener {
+            val email = customer_email!!.text.toString()
+            val password = customer_password!!.text.toString()
             if (TextUtils.isEmpty(email)) {
                 Toast.makeText(
                     this@CustomerLoginRegisterActivity,
@@ -89,7 +89,7 @@ class CustomerLoginRegisterActivity : AppCompatActivity() {
                 ).show()
             } else {
                 loadingBar!!.setTitle("Please wait :")
-                loadingBar!!.setMessage("While system is performing processing on your data...")
+                loadingBar!!.setMessage("Registering You .....")
                 loadingBar!!.show()
                 mAuth!!.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
@@ -99,6 +99,12 @@ class CustomerLoginRegisterActivity : AppCompatActivity() {
                                 FirebaseDatabase.getInstance().reference.child("Users")
                                     .child("Customers").child(currentUserId!!)
                             customersDatabaseRef!!.setValue(true)
+
+                            customer_login_btn!!.visibility = View.VISIBLE
+                            customer_status!!.text = getString(R.string.customerlogin)
+                            customer_register_btn!!.visibility = View.INVISIBLE
+                            customer_register_btn!!.isEnabled = false
+
 //                            val intent = Intent(
 //                                this@CustomerLoginRegisterActivity,
 //                                CustomersMapActivity::class.java
@@ -116,9 +122,9 @@ class CustomerLoginRegisterActivity : AppCompatActivity() {
                     }
             }
         }
-        LoginCustomerButton!!.setOnClickListener {
-            val email = CustomerEmail!!.text.toString()
-            val password = CustomerPassword!!.text.toString()
+        customer_login_btn!!.setOnClickListener {
+            val email = customer_email!!.text.toString()
+            val password = customer_password!!.text.toString()
             if (TextUtils.isEmpty(email)) {
                 Toast.makeText(
                     this@CustomerLoginRegisterActivity,
@@ -134,7 +140,7 @@ class CustomerLoginRegisterActivity : AppCompatActivity() {
                 ).show()
             } else {
                 loadingBar!!.setTitle("Please wait :")
-                loadingBar!!.setMessage("While system is performing processing on your data...")
+                loadingBar!!.setMessage("Authenticating  and Processing on your data...")
                 loadingBar!!.show()
                 mAuth!!.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
@@ -144,11 +150,12 @@ class CustomerLoginRegisterActivity : AppCompatActivity() {
                                 "Sign In , Successful...",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            //                                val intent = Intent(
-                            //                                    this@CustomerLoginRegisterActivity,
-                            //                                    CustomersMapActivity::class.java
-                            //                                )
-                            //                                startActivity(intent)
+                            val intent = Intent(
+                                this@CustomerLoginRegisterActivity,
+                                CustomersMapActivity::class.java
+                            )
+                            startActivity(intent)
+                            finish()
                             loadingBar!!.dismiss()
                         } else {
                             Toast.makeText(
@@ -164,11 +171,11 @@ class CustomerLoginRegisterActivity : AppCompatActivity() {
     }
 
 
-    protected override fun onStart() {
+    override fun onStart() {
         super.onStart()
         firebaseAuthListner?.let { mAuth?.addAuthStateListener(it) }
     }
-    protected override fun onStop() {
+    override fun onStop() {
         super.onStop()
         firebaseAuthListner?.let { mAuth?.removeAuthStateListener(it) }
     }
