@@ -1,28 +1,29 @@
-//package com.example.pda
-//
-//import android.app.ProgressDialog
-//import android.content.Intent
-//import android.net.Uri
-//import androidx.appcompat.app.AppCompatActivity
-//import android.os.Bundle
-//import android.text.TextUtils
-//import android.view.View
-//import android.widget.EditText
-//import android.widget.ImageView
-//import android.widget.TextView
-//import android.widget.Toast
-//import androidx.annotation.NonNull
-//import com.google.android.gms.tasks.Continuation
-//import com.google.android.gms.tasks.OnCompleteListener
-//import com.google.android.gms.tasks.Task
-//import com.google.firebase.auth.FirebaseAuth
-//import com.google.firebase.database.*
-//import com.google.firebase.storage.FirebaseStorage
-//import com.google.firebase.storage.StorageReference
-//import com.google.firebase.storage.StorageTask
-//import java.util.HashMap
-//
-//class SettinggsPage : AppCompatActivity() {
+package com.example.pda
+
+import android.app.ProgressDialog
+import android.content.Intent
+import android.net.Uri
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.text.TextUtils
+import android.view.View
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.annotation.NonNull
+import com.google.android.gms.tasks.Continuation
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.StorageTask
+import java.util.HashMap
+
+class SettinggsPage : AppCompatActivity() {
+
 //    private var getType: String? = null
 //    private var profileImageView: CircleImageView? = null
 //    private var nameEditText: EditText? = null
@@ -38,12 +39,12 @@
 //    private var myUrl = ""
 //    private var uploadTask: StorageTask? = null
 //    private var storageProfilePicsRef: StorageReference? = null
-//
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_settinggs_page)
-//
-//
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_settinggs_page)
+
+
 //        getType = intent.getStringExtra("type")
 //        Toast.makeText(this, getType, Toast.LENGTH_SHORT).show()
 //        mAuth = FirebaseAuth.getInstance()
@@ -215,4 +216,5 @@
 //                    })
 //            }
 //        }
-//}
+    }
+}
