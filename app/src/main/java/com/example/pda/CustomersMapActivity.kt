@@ -1,4 +1,4 @@
-@file:Suppress("DEPRECATION")
+@file:Suppress("DEPRECATION", "UNCHECKED_CAST")
 
 package com.example.pda
 
@@ -11,12 +11,14 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -36,14 +38,14 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.google.firebase.database.FirebaseDatabase.getInstance
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_customers_map.*
+import java.util.*
+import kotlin.collections.HashMap
 
 open class CustomersMapActivity : AppCompatActivity(), OnMapReadyCallback,
     GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
@@ -55,26 +57,34 @@ open class CustomersMapActivity : AppCompatActivity(), OnMapReadyCallback,
     private lateinit var lastLocation: Location
     lateinit var locationRequest: LocationRequest
 
-    //    //getting request customer's id
+//getting request customer's id
     private var customerID = ""
-    private var customerPickupLocation: LatLng? =null
+    private var customerPickupLocation: LatLng? = null
 
-    var driverLocationref:DatabaseReference?=null
+    var driverLocationref: DatabaseReference? = null
+    val geoQuery: GeoQuery? =null
 
-    private var driverID: String? = null
-    private var AssignedCustomerRef: DatabaseReference? = null
-    private var AssignedCustomerPickUpRef: DatabaseReference? = null
-    var PickUpMarker: Marker? = null
-    private var AssignedCustomerPickUpRefListner: ValueEventListener? = null
-    private var txtName: TextView? = null
-    private var txtPhone: TextView? = null
-//    private var settingsbtn: Button? = null
+//    private var driverID: String? = null
+//    private var AssignedCustomerRef: DatabaseReference? = null
+//    private var AssignedCustomerPickUpRef: DatabaseReference? = null
+//    var PickUpMarker: Marker? = null
+//    private var AssignedCustomerPickUpRefListner: ValueEventListener? = null
+//    private var txtName: TextView? = null
+//    private var txtPhone: TextView? = null
+
+//private var settingsbtn: Button? = null
     private var currentLogOutCustomerStatus = false
-    var radius=1.0
-    var driverFound=false
-    var driver_found_id:String?=null
+    var radius = 1.0
+    var driverFound = false
+    var requestType = false
+    var driver_found_id: String? = null
+    var DriversRef: DatabaseReference? = null
+    var DriverMarker: Marker? = null
+    var PickUpMarker: Marker? = null
+    var DriverLocationRefListener:ValueEventListener?=null
 
-    //    private var logoutbtn: Button? = null
+
+//    private var logoutbtn: Button? = null
 //    private var profilePic: CircleImageView? = null
     private var relativeLayout: RelativeLayout? = null
     private var mAuth: FirebaseAuth? = null
@@ -84,10 +94,10 @@ open class CustomersMapActivity : AppCompatActivity(), OnMapReadyCallback,
         setContentView(R.layout.activity_customers_map)
 
 
-        mAuth= FirebaseAuth.getInstance()
-        customerID= FirebaseAuth.getInstance().currentUser?.uid.toString()
-        val CustomersDatabaseRef= getInstance().reference.child("Customers Request")
-        driverLocationref= getInstance().reference.child("Drivers Available")
+        mAuth = FirebaseAuth.getInstance()
+        customerID = FirebaseAuth.getInstance().currentUser?.uid.toString()
+        val CustomersDatabaseRef = getInstance().reference.child("Customers Request")
+        driverLocationref = getInstance().reference.child("Drivers Available")
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
@@ -99,32 +109,56 @@ open class CustomersMapActivity : AppCompatActivity(), OnMapReadyCallback,
             mAuth?.signOut()
             LogOutCustomer()
         }
-        customer_request.setOnClickListener{
+        customer_request.setOnClickListener {
 
-            val geoFire=GeoFire(CustomersDatabaseRef)
-            geoFire.setLocation(
-                customerID, GeoLocation(
-                    lastLocation.latitude,
-                    lastLocation.longitude
+            if (requestType){
+
+                requestType=false
+                geoQuery?.removeAllListeners()
+                driverLocationref?.removeEventListener(DriverLocationRefListener!!)
+
+                if (driverFound!=null){
+                    val DriversRef= getInstance().getReference().child("Users").child("Drivers").child(driver_found_id!!)
+                    DriversRef.setValue(true)
+                    driver_found_id=null
+                }
+                driverFound=false
+                radius=1.0
+
+                val customerId=FirebaseAuth.getInstance().currentUser?.uid
+                val geoFire =GeoFire(CustomersDatabaseRef)
+                geoFire.removeLocation(customerId)
+
+                if(PickUpMarker!=null){
+                    PickUpMarker?.remove()
+                    customer_request.text="Request a Driver"
+                }
+
+            }else{
+                requestType=true
+                val geoFire = GeoFire(CustomersDatabaseRef)
+                geoFire.setLocation(
+                    customerID, GeoLocation(
+                        lastLocation.latitude,
+                        lastLocation.longitude
+                    )
                 )
-            )
-            customerPickupLocation=LatLng(lastLocation.latitude, lastLocation.longitude)
+                customerPickupLocation = LatLng(lastLocation.latitude, lastLocation.longitude)
 
-            mMap.addMarker(
-                MarkerOptions().position(customerPickupLocation!!).title("Pick up Location")
-            )
-
-
-            customer_request.text=getString(R.string.gettingyouadriver)
-            getClosestDriver()
+                mMap.addMarker(
+                    MarkerOptions().position(customerPickupLocation!!).title("Pick up Location")
+                )
+                customer_request.text = getString(R.string.gettingyouadriver)
+                getClosestDriver()
+            }
 
         }
     }
 
     private fun getClosestDriver() {
-        val geoFire=GeoFire(driverLocationref)
+        val geoFire = GeoFire(driverLocationref)
 
-        val geoQuery:GeoQuery=geoFire.queryAtLocation(
+        val geoQuery: GeoQuery = geoFire.queryAtLocation(
             GeoLocation(
                 customerPickupLocation!!.latitude,
                 customerPickupLocation!!.longitude
@@ -135,21 +169,25 @@ open class CustomersMapActivity : AppCompatActivity(), OnMapReadyCallback,
             override fun onKeyEntered(key: String, location: GeoLocation) {
                 //anytime the driver is called this method will be called
                 //key=driverID and the location
-                if (!driverFound) {
+                if (!driverFound && requestType) {
                     driverFound = true
-                    driver_found_id=key
+                    driver_found_id = key
 
 
 //                    //we tell driver which customer he is going to have
-//                    DriversRef =
-//                        getInstance().reference.child("Users").child("Drivers").child(driver_found_id)
-//                    val driversMap = HashMap<Any, Any>()
-//                    driversMap["CustomerRideID"] = customerID
-//                    DriversRef.updateChildren(driversMap)
-//
-//                    //Show driver location on customerMapActivity
-//                    GettingDriverLocation()
-//                    CallCabCarButton.setText("Looking for Driver Location...")
+                    DriversRef =
+                        getInstance().reference.child("Users").child("Drivers").child(
+                            driver_found_id!!
+                        )
+                    val driversMap = HashMap<String, Any>()
+                    driversMap["CustomerRideID"] = customerID
+                    DriversRef!!.updateChildren(driversMap)
+
+                    //Show driver location on customerMapActivity
+                    GettingDriverLocation()
+                    customer_request.text = "Looking for Driver Location..."
+
+
                 }
             }
 
@@ -168,13 +206,74 @@ open class CustomersMapActivity : AppCompatActivity(), OnMapReadyCallback,
 
     }
 
+    private fun GettingDriverLocation() {
 
+//this will look for the driver around and online , if the driver accepts the request
+// then, the driver working node is available and we get his location using his ID through the DataSnapshot
+
+        DriverLocationRefListener=driverLocationref?.child(driver_found_id!!)?.child("l")?.addValueEventListener(object :
+            ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.KITKAT)
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0.exists() && requestType) {
+                    val driverLocationoncustomersap: List<Objects> = p0.value as List<Objects>
+                    var LocationLat = 0.0
+                    var LocationLng = 0.0
+                    customer_request.text = getString(R.string.driverfound)
+
+
+                    if (driverLocationoncustomersap.get(0) != null) {
+                        LocationLat = driverLocationoncustomersap[0].toString() as Double
+                    }
+                    if (driverLocationoncustomersap.get(1) != null) {
+                        LocationLng = driverLocationoncustomersap[1].toString() as Double
+                    }
+
+                    val driverlatlngoncustomermap= LatLng(LocationLat, LocationLng)
+
+                    if (DriverMarker != null) {
+                        DriverMarker?.remove()
+                    }
+
+                    //customers location
+                    val location1 = Location("")
+                    location1.latitude = customerPickupLocation!!.latitude
+                    location1.longitude = customerPickupLocation!!.longitude
+
+                    //drivers locations
+                    val location2 = Location("")
+                    location2.latitude = driverlatlngoncustomermap.latitude
+                    location2.longitude = driverlatlngoncustomermap.longitude
+
+                    //calculate the distance between the driver and the customer
+                    val distance = location1.distanceTo(location2)
+                    if (distance<90){
+                        customer_request.text=getString(R.string.driverishere)
+                    }else{
+                        customer_request.text = "driver is ${distance.toString()} away"
+                    }
+
+                    DriverMarker = mMap.addMarker(
+                        MarkerOptions().position(driverlatlngoncustomermap)
+                            .title("Your Driver is here")
+                    )
+
+
+                }
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
 
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        // Add a marker in Sydney and move the camera
+        // Add a marker and move the camera
         buildGoogleApiClient()
 
         if (ActivityCompat.checkSelfPermission(
@@ -263,7 +362,6 @@ open class CustomersMapActivity : AppCompatActivity(), OnMapReadyCallback,
         }
 
 
-
     }
 
     @Synchronized
@@ -280,7 +378,7 @@ open class CustomersMapActivity : AppCompatActivity(), OnMapReadyCallback,
     override fun onStop() {
         super.onStop()
 
-        if(!currentLogOutCustomerStatus){
+        if (!currentLogOutCustomerStatus) {
             DisconnectDriver()
         }
 
@@ -291,7 +389,7 @@ open class CustomersMapActivity : AppCompatActivity(), OnMapReadyCallback,
         val database = Firebase.database.reference
 //        Toast.makeText(this,userID.toString(),Toast.LENGTH_SHORT).show()
         val DriversAvailabiltyRef: DatabaseReference = database.child("Drivers Available")
-        val geoFire= GeoFire(DriversAvailabiltyRef)
+        val geoFire = GeoFire(DriversAvailabiltyRef)
         geoFire.removeLocation(userID)
 
     }
