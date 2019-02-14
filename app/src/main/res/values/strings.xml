@@ -34,5 +34,19 @@
     <string name="mambametality">"    Resilience  ‘The Black Mamba’ was a nickname and alter-ego Kobe created for himself in a deliberate effort to handle significant off-court issues in his life, and allow him to perform on-court to the level he expected of himself.  ‘Kobe’ would deal with the issues with his personal life, and ‘The Black Mamba’ took care of business on the basketball court.  In spite of obstacles, Kobe persevered.     Even a ruptured achilles tendon couldn’t stop him from shooting – and making – the free throws he was owed.  Nor did an injured right (shooting) shoulder: he just shot with his left."</string>
     <string name="imdriver">I\'m a Driver</string>
     <string name="imcustomer">I\'m a Customer</string>
+    <string name="logout">Logout</string>
+    <string name="settings">Settings</string>
+    <string name="emailedittext">Email…</string>
+    <string name="passwordedittext">Password…</string>
+    <string name="loginedittext">Login</string>
+    <string name="don_t_have_an_account_textvies">Don\'t have an Account ?</string>
+    <string name="registerbtn">Register</string>
+    <string name="request">Request</string>
+    <string name="register">Register</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="login">Login</string>
+    <string name="customerregistration">Customer Registration</string>
+    <string name="customerlogin">Customer Login</string>
+    <string name="driverregistration">Driver Registration</string>
 
 </resources>
