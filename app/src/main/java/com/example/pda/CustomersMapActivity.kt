@@ -57,12 +57,12 @@ open class CustomersMapActivity : AppCompatActivity(), OnMapReadyCallback,
     private lateinit var lastLocation: Location
     lateinit var locationRequest: LocationRequest
 
-//getting request customer's id
+    //getting request customer's id
     private var customerID = ""
     private var customerPickupLocation: LatLng? = null
 
     var driverLocationref: DatabaseReference? = null
-    val geoQuery: GeoQuery? =null
+    val geoQuery: GeoQuery? = null
 
 //    private var driverID: String? = null
 //    private var AssignedCustomerRef: DatabaseReference? = null
@@ -72,7 +72,7 @@ open class CustomersMapActivity : AppCompatActivity(), OnMapReadyCallback,
 //    private var txtName: TextView? = null
 //    private var txtPhone: TextView? = null
 
-//private var settingsbtn: Button? = null
+    //private var settingsbtn: Button? = null
     private var currentLogOutCustomerStatus = false
     var radius = 1.0
     var driverFound = false
@@ -81,10 +81,10 @@ open class CustomersMapActivity : AppCompatActivity(), OnMapReadyCallback,
     var DriversRef: DatabaseReference? = null
     var DriverMarker: Marker? = null
     var PickUpMarker: Marker? = null
-    var DriverLocationRefListener:ValueEventListener?=null
+    var DriverLocationRefListener: ValueEventListener? = null
 
 
-//    private var logoutbtn: Button? = null
+    //    private var logoutbtn: Button? = null
 //    private var profilePic: CircleImageView? = null
     private var relativeLayout: RelativeLayout? = null
     private var mAuth: FirebaseAuth? = null
@@ -111,31 +111,32 @@ open class CustomersMapActivity : AppCompatActivity(), OnMapReadyCallback,
         }
         customer_request.setOnClickListener {
 
-            if (requestType){
+            if (requestType) {
 
-                requestType=false
+                requestType = false
                 geoQuery?.removeAllListeners()
                 driverLocationref?.removeEventListener(DriverLocationRefListener!!)
 
-                if (driverFound!=null){
-                    val DriversRef= getInstance().getReference().child("Users").child("Drivers").child(driver_found_id!!)
+                if (driverFound != null) {
+                    val DriversRef = getInstance().getReference().child("Users").child("Drivers")
+                        .child(driver_found_id!!)
                     DriversRef.setValue(true)
-                    driver_found_id=null
+                    driver_found_id = null
                 }
-                driverFound=false
-                radius=1.0
+                driverFound = false
+                radius = 1.0
 
-                val customerId=FirebaseAuth.getInstance().currentUser?.uid
-                val geoFire =GeoFire(CustomersDatabaseRef)
+                val customerId = FirebaseAuth.getInstance().currentUser?.uid
+                val geoFire = GeoFire(CustomersDatabaseRef)
                 geoFire.removeLocation(customerId)
 
-                if(PickUpMarker!=null){
+                if (PickUpMarker != null) {
                     PickUpMarker?.remove()
-                    customer_request.text="Request a Driver"
+                    customer_request.text = "Request a Driver"
                 }
 
-            }else{
-                requestType=true
+            } else {
+                requestType = true
                 val geoFire = GeoFire(CustomersDatabaseRef)
                 geoFire.setLocation(
                     customerID, GeoLocation(
@@ -147,6 +148,7 @@ open class CustomersMapActivity : AppCompatActivity(), OnMapReadyCallback,
 
                 mMap.addMarker(
                     MarkerOptions().position(customerPickupLocation!!).title("Pick up Location")
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.personpindrop))
                 )
                 customer_request.text = getString(R.string.gettingyouadriver)
                 getClosestDriver()
@@ -211,62 +213,61 @@ open class CustomersMapActivity : AppCompatActivity(), OnMapReadyCallback,
 //this will look for the driver around and online , if the driver accepts the request
 // then, the driver working node is available and we get his location using his ID through the DataSnapshot
 
-        DriverLocationRefListener=driverLocationref?.child(driver_found_id!!)?.child("l")?.addValueEventListener(object :
-            ValueEventListener {
-            @RequiresApi(Build.VERSION_CODES.KITKAT)
-            override fun onDataChange(p0: DataSnapshot) {
-                if (p0.exists() && requestType) {
-                    val driverLocationoncustomersap: List<Objects> = p0.value as List<Objects>
-                    var LocationLat = 0.0
-                    var LocationLng = 0.0
-                    customer_request.text = getString(R.string.driverfound)
+        DriverLocationRefListener =
+            driverLocationref?.child(driver_found_id!!)?.child("l")?.addValueEventListener(object :
+                ValueEventListener {
+                @RequiresApi(Build.VERSION_CODES.KITKAT)
+                override fun onDataChange(p0: DataSnapshot) {
+                    if (p0.exists() && requestType) {
+                        val driverLocationoncustomersap: List<Objects> = p0.value as List<Objects>
+                        var LocationLat = 0.0
+                        var LocationLng = 0.0
+                        customer_request.text = getString(R.string.driverfound)
 
 
-                    if (driverLocationoncustomersap.get(0) != null) {
-                        LocationLat = driverLocationoncustomersap[0].toString() as Double
+                        if (driverLocationoncustomersap.get(0) != null) {
+                            LocationLat = driverLocationoncustomersap[0].toString() as Double
+                        }
+                        if (driverLocationoncustomersap.get(1) != null) {
+                            LocationLng = driverLocationoncustomersap[1].toString() as Double
+                        }
+
+                        val driverlatlngoncustomermap = LatLng(LocationLat, LocationLng)
+
+                        if (DriverMarker != null) {
+                            DriverMarker?.remove()
+                        }
+
+                        //customers location
+                        val location1 = Location("")
+                        location1.latitude = customerPickupLocation!!.latitude
+                        location1.longitude = customerPickupLocation!!.longitude
+
+                        //drivers locations
+                        val location2 = Location("")
+                        location2.latitude = driverlatlngoncustomermap.latitude
+                        location2.longitude = driverlatlngoncustomermap.longitude
+
+                        //calculate the distance between the driver and the customer
+                        val distance = location1.distanceTo(location2)
+                        if (distance < 90) {
+                            customer_request.text = getString(R.string.driverishere)
+                        } else {
+                            customer_request.text = "driver is ${distance.toString()}m away"
+                        }
+
+                        DriverMarker = mMap.addMarker(
+                            MarkerOptions().position(driverlatlngoncustomermap)
+                                .title("Your Driver is here").icon(BitmapDescriptorFactory.fromResource(R.drawable.driver))
+                        )
                     }
-                    if (driverLocationoncustomersap.get(1) != null) {
-                        LocationLng = driverLocationoncustomersap[1].toString() as Double
-                    }
-
-                    val driverlatlngoncustomermap= LatLng(LocationLat, LocationLng)
-
-                    if (DriverMarker != null) {
-                        DriverMarker?.remove()
-                    }
-
-                    //customers location
-                    val location1 = Location("")
-                    location1.latitude = customerPickupLocation!!.latitude
-                    location1.longitude = customerPickupLocation!!.longitude
-
-                    //drivers locations
-                    val location2 = Location("")
-                    location2.latitude = driverlatlngoncustomermap.latitude
-                    location2.longitude = driverlatlngoncustomermap.longitude
-
-                    //calculate the distance between the driver and the customer
-                    val distance = location1.distanceTo(location2)
-                    if (distance<90){
-                        customer_request.text=getString(R.string.driverishere)
-                    }else{
-                        customer_request.text = "driver is ${distance.toString()} away"
-                    }
-
-                    DriverMarker = mMap.addMarker(
-                        MarkerOptions().position(driverlatlngoncustomermap)
-                            .title("Your Driver is here")
-                    )
-
-
                 }
-            }
 
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("Not yet implemented")
-            }
+                override fun onCancelled(p0: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
 
-        })
+            })
     }
 
 

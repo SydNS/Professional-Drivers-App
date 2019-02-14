@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.pda">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the "MyLocation" functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@mipmap/splashlogo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/splashlogo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".SettinggsPage"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -29,20 +30,37 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".DriversMapActivity"
-            android:label="@string/title_activity_drivers_map"/>
-        <activity android:name=".CustomerLoginRegisterActivity" android:theme="@style/Nobars"/>
-        <activity android:name=".DriverLoginRegisterActivity" android:theme="@style/Nobars" />
-        <activity android:name=".WelcomeActivity" android:theme="@style/Nobars"/>
-        <activity android:name=".OnBoardActivity" android:theme="@style/Nobars"/>
-        <activity android:name=".SplashScreen"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        <activity
+            android:name=".DriversMapActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_drivers_map"
+            android:theme="@style/Nobars" />
+        <activity
+            android:name=".CustomersMapActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_drivers_map"
+            android:theme="@style/Nobars" />
+        <activity
+            android:name=".CustomerLoginRegisterActivity"
+            android:theme="@style/Nobars" />
+        <activity
+            android:name=".DriverLoginRegisterActivity"
+            android:theme="@style/Nobars" />
+        <activity
+            android:name=".WelcomeActivity"
+            android:theme="@style/Nobars" />
+        <activity
+            android:name=".OnBoardActivity"
+            android:theme="@style/Nobars" />
+        <activity
+            android:name=".SplashScreen"
+            android:theme="@style/Nobars">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>
