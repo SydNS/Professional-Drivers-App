@@ -1,26 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     tools:context="com.example.pda.DriverLoginRegisterActivity">
 
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_marginTop="150dp"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/string_dedcforimage"
+        android:src="@mipmap/splashlogo_round" />
     <TextView
-        android:id="@+id/titlr_driver"
-        android:layout_above="@+id/driver_email"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="38dp"
-        android:text="Driver Login"
-        android:textAlignment="center"
-        android:textColor="@android:color/white"
-        android:textSize="24sp"
-        android:textStyle="normal"
+        android:id="@+id/driver_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:gravity="center_horizontal" />
+        android:layout_below="@id/logo"
+        android:fontFamily="@font/caviardreams"
+        android:gravity="center_horizontal"
+        android:text="@string/app_name"
+        android:textColor="@color/colortext"
+        android:textSize="22sp"/>
+
 
     <EditText
         android:id="@+id/driver_email"
@@ -28,33 +33,33 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginHorizontal="10dp"
         android:ems="10"
-        android:hint="Email..."
-        android:inputType="textEmailAddress" />
+        android:hint="@string/emailedittext"
+        android:inputType="textEmailAddress"
+        android:fontFamily="@font/caviardreams"
+        android:autofillHints="@string/emailedittext" />
 
     <EditText
         android:id="@+id/driver_password"
         android:layout_below="@+id/driver_email"
         android:layout_marginTop="16dp"
-        android:hint="Password..."
-
+        android:hint="@string/passwordedittext"
         android:ems="10"
         android:inputType="textPassword"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginHorizontal="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true" />
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/caviardreams"
+        android:importantForAutofill="no" />
 
     <Button
         android:id="@+id/login_driver_btn"
-        android:text="Login"
+        android:text="@string/login"
         android:layout_below="@+id/driver_password"
         android:layout_marginTop="13dp"
-        android:background="@color/colorAccent"
+        android:background="@drawable/btnbackground2"
         style="@style/loginregisterbuttons" />
 
     <TextView
@@ -64,19 +69,20 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/login_driver_btn"
         android:layout_marginTop="5dp"
-        android:text="Don't have an account?"
+        android:text="@string/don_t_have_an_account"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textColor="@android:color/holo_red_dark"
-        android:textSize="16sp"
+        android:textSize="15sp"
+        android:fontFamily="@font/caviardreams"
         android:layout_alignParentLeft="true"
         android:gravity="center_horizontal" />
 
     <Button
         android:id="@+id/register_driver_btn"
-        android:text="Register"
+        android:text="@string/register"
         android:layout_below="@+id/create_driver_account"
         android:textAllCaps="false"
-        android:background="@color/colortext"
+        android:background="@drawable/btnbackground"
         style="@style/loginregisterbuttons"/>
 </RelativeLayout>
