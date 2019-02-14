@@ -48,5 +48,6 @@
     <string name="customerregistration">Customer Registration</string>
     <string name="customerlogin">Customer Login</string>
     <string name="driverregistration">Driver Registration</string>
+    <string name="gettingyouadriver">Getting Your Driver</string>
 
 </resources>
