@@ -3,30 +3,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DriversMapActivity">
+    tools:context=".CustomersMapActivity">
 
 
     <Button
-        android:id="@+id/logoutbtndriver"
+        android:id="@+id/logoutbtncustomer"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
         android:background="@drawable/logout"
         android:layout_marginLeft="20dp" />
 
     <Button
-        android:id="@+id/settingsbtndriver"
+        android:id="@+id/settingsbtncustomer"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
         android:layout_marginEnd="20dp"
-        android:layout_marginTop="30dp"
         android:layout_marginRight="20dp"
-        android:background="@drawable/settings"
-        android:layout_alignParentStart="true" />
+        android:background="@drawable/settings" />
+
 
 
     <fragment
@@ -35,5 +34,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".DriversMapActivity" />
+
+    <Button
+        android:id="@+id/customer_request"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_below="@id/map"
+        android:layout_marginTop="-70dp"
+        android:text="@string/request" />
 
 </RelativeLayout>
