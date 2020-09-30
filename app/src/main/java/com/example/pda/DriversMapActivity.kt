@@ -3,6 +3,7 @@
 package com.example.pda
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
@@ -134,34 +135,8 @@ open class DriversMapActivity : AppCompatActivity(), OnMapReadyCallback,
                 .title("my Location")
         )
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15F))
+        DisconnectDriver()
 
-
-
-        val userID: String? = FirebaseAuth.getInstance().currentUser?.uid
-        val DriversAvailabilityRef: DatabaseReference =
-            getInstance().reference.child("Drivers Available")
-        val geoFireAvailability = GeoFire(DriversAvailabilityRef)
-        val DriversWorkingRef: DatabaseReference =
-            getInstance().reference.child("Drivers Working")
-        val geoFireWorking = GeoFire(DriversWorkingRef)
-        when (customerID) {
-            "" -> {
-                geoFireWorking.removeLocation(userID)
-                geoFireAvailability.setLocation(
-                    userID,
-                    GeoLocation(location.latitude, location.longitude)
-                )
-            }
-            else -> {
-                geoFireAvailability.removeLocation(userID)
-                geoFireWorking.setLocation(
-                    userID,
-                    GeoLocation(location.latitude, location.longitude)
-                )
-            }
-
-
-        }
     }
 
     @Synchronized
@@ -173,5 +148,47 @@ open class DriversMapActivity : AppCompatActivity(), OnMapReadyCallback,
             .build()
         googleApiClient.connect()
     }
+
+
+    protected override fun onStop() {
+        super.onStop()
+//        if (!currentLogOutUserStatus) {
+            DisconnectDriver()
+//        }
+    }
+
+    private fun DisconnectDriver() {
+        val userID: String? = FirebaseAuth.getInstance().currentUser?.getUid()
+        val DriversAvailabiltyRef: DatabaseReference =
+            getInstance().reference.child("Drivers Available")
+        val geoFire = GeoFire(DriversAvailabiltyRef)
+        geoFire.removeLocation(userID)
+//        when (customerID) {
+//            "" -> {
+//                geoFireWorking.removeLocation(userID)
+//                geoFireAvailability.setLocation(
+//                    userID,
+//                    GeoLocation(location.latitude, location.longitude)
+//                )
+//            }
+//            else -> {
+//                geoFireAvailability.removeLocation(userID)
+//                geoFireWorking.setLocation(
+//                    userID,
+//                    GeoLocation(location.latitude, location.longitude)
+//                )
+//            }
+//
+//
+//        }
+    }
+
+    fun LogOutUser() {
+        val startPageIntent = Intent(this, WelcomeActivity::class.java)
+        startPageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(startPageIntent)
+        finish()
+    }
+
 
 }
