@@ -12,6 +12,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
@@ -152,15 +153,19 @@ open class DriversMapActivity : AppCompatActivity(), OnMapReadyCallback,
 
     protected override fun onStop() {
         super.onStop()
-//        if (!currentLogOutUserStatus) {
-            DisconnectDriver()
-//        }
+        val userID: String? = FirebaseAuth.getInstance().currentUser?.uid
+        val database = getInstance()
+        val DriversAvailabiltyRef: DatabaseReference = database.reference.child("Drivers Available")
+        val geoFire = GeoFire(DriversAvailabiltyRef)
+        geoFire.removeLocation(userID)
     }
 
     private fun DisconnectDriver() {
-        val userID: String? = FirebaseAuth.getInstance().currentUser?.getUid()
-        val DriversAvailabiltyRef: DatabaseReference =
-            getInstance().reference.child("Drivers Available")
+        val userID: String? = FirebaseAuth.getInstance().currentUser?.uid
+        val database = getInstance()
+        Toast.makeText(this,userID.toString(),Toast.LENGTH_SHORT).show()
+
+        val DriversAvailabiltyRef: DatabaseReference = database.reference.child("Drivers Available")
         val geoFire = GeoFire(DriversAvailabiltyRef)
         geoFire.removeLocation(userID)
 //        when (customerID) {
