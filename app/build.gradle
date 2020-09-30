@@ -42,4 +42,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'com.firebase:geofire-android:3.0.0'
 
+    // See maven.google.com for the latest versions
+// This library transitively includes the firebase-database library
+
 }
