@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.example.pda
 
 //import CropImage.ActivityResult
@@ -135,30 +137,28 @@ class CustomerLoginRegisterActivity : AppCompatActivity() {
                 loadingBar!!.setMessage("While system is performing processing on your data...")
                 loadingBar!!.show()
                 mAuth!!.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(object : OnCompleteListener<AuthResult?> {
-                        override fun onComplete(@NonNull task: Task<AuthResult?>) {
-                            if (task.isSuccessful) {
-                                Toast.makeText(
-                                    this@CustomerLoginRegisterActivity,
-                                    "Sign In , Successful...",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-//                                val intent = Intent(
-//                                    this@CustomerLoginRegisterActivity,
-//                                    CustomersMapActivity::class.java
-//                                )
-//                                startActivity(intent)
-                                loadingBar!!.dismiss()
-                            } else {
-                                Toast.makeText(
-                                    this@CustomerLoginRegisterActivity,
-                                    "Error Occurred, while Signing In... ",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                loadingBar!!.dismiss()
-                            }
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(
+                                this@CustomerLoginRegisterActivity,
+                                "Sign In , Successful...",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            //                                val intent = Intent(
+                            //                                    this@CustomerLoginRegisterActivity,
+                            //                                    CustomersMapActivity::class.java
+                            //                                )
+                            //                                startActivity(intent)
+                            loadingBar!!.dismiss()
+                        } else {
+                            Toast.makeText(
+                                this@CustomerLoginRegisterActivity,
+                                "Error Occurred, while Signing In... ",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            loadingBar!!.dismiss()
                         }
-                    })
+                    }
             }
         }
     }

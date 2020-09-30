@@ -2,40 +2,40 @@
 
 package com.example.pda
 
+
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
 import android.location.Location
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
+import androidx.annotation.DrawableRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.firebase.geofire.GeoFire
-import com.firebase.geofire.GeoLocation
 import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.api.GoogleApi
-
-
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.location.LocationListener
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.FirebaseDatabase.*
+import com.google.firebase.database.FirebaseDatabase.getInstance
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_drivers_map.*
 
 open class DriversMapActivity : AppCompatActivity(), OnMapReadyCallback,
@@ -62,7 +62,6 @@ open class DriversMapActivity : AppCompatActivity(), OnMapReadyCallback,
     //    private var logoutbtn: Button? = null
 //    private var profilePic: CircleImageView? = null
     private var relativeLayout: RelativeLayout? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,8 +97,8 @@ open class DriversMapActivity : AppCompatActivity(), OnMapReadyCallback,
 
     override fun onConnected(p0: Bundle?) {
         locationRequest = LocationRequest()
-        locationRequest.interval = 1000
-        locationRequest.fastestInterval = 1000
+        locationRequest.interval = 10000
+        locationRequest.fastestInterval = 10000
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
 
         if (ActivityCompat.checkSelfPermission(
@@ -128,15 +127,20 @@ open class DriversMapActivity : AppCompatActivity(), OnMapReadyCallback,
     }
 
     override fun onLocationChanged(location: Location) {
+
         lastLocation = location
+
+        var icon = BitmapDescriptorFactory.fromResource(R.drawable.pda_driver)
         var latlong = LatLng(location.latitude, location.longitude)
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latlong))
         mMap.addMarker(
             MarkerOptions().position(latlong)
                 .title("my Location")
-        )
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(15F))
+                )
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(17F))
         DisconnectDriver()
+
+
 
     }
 
@@ -162,10 +166,10 @@ open class DriversMapActivity : AppCompatActivity(), OnMapReadyCallback,
 
     private fun DisconnectDriver() {
         val userID: String? = FirebaseAuth.getInstance().currentUser?.uid
-        val database = getInstance()
-        Toast.makeText(this,userID.toString(),Toast.LENGTH_SHORT).show()
+        val database = Firebase.database.reference
+//        Toast.makeText(this,userID.toString(),Toast.LENGTH_SHORT).show()
 
-        val DriversAvailabiltyRef: DatabaseReference = database.reference.child("Drivers Available")
+        val DriversAvailabiltyRef: DatabaseReference = database.child("Drivers Available")
         val geoFire = GeoFire(DriversAvailabiltyRef)
         geoFire.removeLocation(userID)
 //        when (customerID) {
@@ -193,6 +197,32 @@ open class DriversMapActivity : AppCompatActivity(), OnMapReadyCallback,
         startPageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(startPageIntent)
         finish()
+    }
+
+
+    open fun bitmapDescriptorFromVector(
+        context: Context,
+        @DrawableRes vectorDrawableResourceId: Int
+    ): BitmapDescriptor? {
+        val background: Drawable? =
+            ContextCompat.getDrawable(context, R.drawable.pda_driver)
+        background?.setBounds(0, 0, background.intrinsicWidth, background.intrinsicHeight)
+        val vectorDrawable: Drawable? = ContextCompat.getDrawable(context, vectorDrawableResourceId)
+        vectorDrawable?.setBounds(
+            40,
+            20,
+            vectorDrawable.intrinsicWidth + 40,
+            vectorDrawable.intrinsicHeight + 20
+        )
+        val bitmap: Bitmap = Bitmap.createBitmap(
+            background!!.intrinsicWidth,
+            background.intrinsicHeight,
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bitmap)
+        background.draw(canvas)
+        vectorDrawable?.draw(canvas)
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 
 

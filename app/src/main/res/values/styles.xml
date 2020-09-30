@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
@@ -6,5 +6,32 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
+    <style name="onboardText" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="color">@color/colortext</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:text">@string/mambametality</item>
+        <item name="android:gravity">center</item>
+        <item name="android:justificationMode" tools:ignore="NewApi">inter_word</item>
+    </style>
+
+    <style name="Nobars" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="loginregisterbuttons">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:layout_width">200dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+
+    </style>
+
 
 </resources>

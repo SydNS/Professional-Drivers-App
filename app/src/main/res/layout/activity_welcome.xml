@@ -4,33 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
+    android:background="@color/colorPrimary"
     tools:context="com.example.pda.WelcomeActivity">
 
     <Button
         android:id="@+id/customer_welcome_btn"
         android:layout_width="250dp"
         android:layout_height="60dp"
-        android:layout_marginBottom="131dp"
-        android:background="@android:color/holo_red_dark"
-        android:text="I'm a Customer"
-        android:textAllCaps="false"
-        android:textColor="@android:color/background_light"
-        android:textSize="18sp"
-        android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/driver_welcome_btn"
-        android:layout_alignLeft="@+id/driver_welcome_btn" />
+        android:layout_alignLeft="@+id/driver_welcome_btn"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="131dp"
+        android:text="@string/imcustomer"
+        android:textAllCaps="false"
+        android:textColor="@color/colorPrimary"
+        android:background="@android:color/holo_red_dark"
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/driver_welcome_btn"
         android:layout_width="250dp"
         android:layout_height="60dp"
-        android:background="@android:color/background_light"
-        android:text="I'm a Driver"
-        android:textAllCaps="false"
-        android:textColor="@android:color/holo_red_dark"
-        android:textSize="18sp"
         android:layout_above="@+id/customer_welcome_btn"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="11dp" />
+        android:layout_marginBottom="11dp"
+        android:text="@string/imdriver"
+        android:textAllCaps="false"
+        android:textColor="@color/colorPrimary"
+        android:background="@color/colorAccent"
+        android:textSize="18sp" />
 </RelativeLayout>

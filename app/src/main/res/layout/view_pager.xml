@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <ImageView
+        android:id="@+id/imgViewPager"
+        android:layout_width="361dp"
+        android:layout_height="370dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="16dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/map"
+        android:contentDescription="@string/imagedesconboarding" />
+
+    <TextView
+        android:id="@+id/txtTitleViewPager"
+        style="@style/onboardText"
+        android:layout_marginBottom="16dp"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/txtDescViewPager"
+        style="@style/onboardText"
+        android:textSize="20sp" />
+
+</LinearLayout>

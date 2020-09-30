@@ -2,6 +2,7 @@ package com.example.pda
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.WindowManager
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -17,7 +18,12 @@ class WelcomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(com.example.pda.R.layout.activity_welcome)
+        setContentView(R.layout.activity_welcome)
+
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+            WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+        )
 
 
 //        mAuth = FirebaseAuth.getInstance();
@@ -38,10 +44,12 @@ class WelcomeActivity : AppCompatActivity() {
         driver_welcome_btn?.setOnClickListener {
             val driverIntent = Intent(this,DriverLoginRegisterActivity::class.java)
             startActivity(driverIntent)
+            finish()
         }
         customer_welcome_btn?.setOnClickListener {
             val customerIntent = Intent(this,CustomerLoginRegisterActivity::class.java            )
             startActivity(customerIntent)
+            finish()
         }
     }
     //    @Override

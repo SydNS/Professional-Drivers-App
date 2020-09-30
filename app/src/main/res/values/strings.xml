@@ -1,5 +1,38 @@
 <resources>
-    <string name="app_name">PDA</string>
+    <string name="app_name">Profession Drivers App</string>
     <string name="customer_login">Customer Login</string>
     <string name="title_activity_drivers_map">Map</string>
+
+    <string name="title1">What We Do</string>
+    <string name="title2">Our Drivers</string>
+    <string name="title3">Chauffeurs</string>
+
+
+    <string name="desc1">We at PDA spend heavily in driver
+    protection programs and professional education.
+    With our experienced, history and policing drivers, we
+    want to make the driving easier for you.</string>
+    <string name="desc2">The driver is fitted with PPE and is
+    expected to perform a complete procedural and precautionary examination.
+    </string>
+    <string name="desc3">
+    Our skilled chauffeurs are uniformly equipped
+    to meet the highest quality level.</string>
+
+
+
+    <string name="string_dedcforimage">logoforco</string>
+    <string name="dont_have_account">Dont have account?</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="sign_in_btn">Sign in</string>
+    <string name="skip_onboarding">Skip</string>
+    <string name="nextonboarding">Next</string>
+    <string name="imagedesconboarding">imagedesconboarding</string>
+    <string name="imagedesconboardinglanscape">imagedesconboardinglanscape</string>
+
+    <string name="mambametality">"    Resilience  ‘The Black Mamba’ was a nickname and alter-ego Kobe created for himself in a deliberate effort to handle significant off-court issues in his life, and allow him to perform on-court to the level he expected of himself.  ‘Kobe’ would deal with the issues with his personal life, and ‘The Black Mamba’ took care of business on the basketball court.  In spite of obstacles, Kobe persevered.     Even a ruptured achilles tendon couldn’t stop him from shooting – and making – the free throws he was owed.  Nor did an injured right (shooting) shoulder: he just shot with his left."</string>
+    <string name="imdriver">I\'m a Driver</string>
+    <string name="imcustomer">I\'m a Customer</string>
+
 </resources>

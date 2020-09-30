@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorPrimary">#a0febf</color>
+    <color name="colorPrimaryDark">#8ee2b8</color>
     <color name="colorAccent">#03DAC5</color>
+
+    Light Seafoam
+<!--    #a0febf-->
+
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colortext">#1E3D51</color>
+    <color name="colorGrey">#666666</color>
+    <color name="colorLightGrey">#999999</color>
+
+    <color name="cards">#9ACCE4</color>
+    <color name="cardText">#132227</color>
+    <color name="cardBlack">#000000</color>
+    <color name="cardWhite">#F8F9FC</color>
+    <color name="cardSuccess">#68C46C</color>
+    <color name="colorBackground">#8ee2b8</color>
 </resources>
